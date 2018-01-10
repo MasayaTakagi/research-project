@@ -25,9 +25,12 @@ public class FullPointData {
 
     public ArrayList<SinglePointData> dataList = new ArrayList<SinglePointData>();
 
-    private final double TURNING_SPEED = 20; //右左折中の上限速度
-    private final double TOTAL_DISTANCE = 20; //右左折中の上限移動距離
+    private final double TURNING_SPEED = 30; //右左折中の上限速度
+    private final double STOP_SPEED = 3; //停止と判断する速度
+    private final double STOP_DISTANCE = 1; //停止と判断する移動距離
+    private final double TOTAL_DISTANCE = 30; //右左折中の上限移動距離
     private final double ANGLE_VARIATION = 60;  //右左折中の最小変化角
+    private final double CHEAK_PROPORTION = 0.5;  //右左折と判断する割合
 
     public FullPointData() {
 
@@ -72,26 +75,32 @@ public class FullPointData {
         ArrayList<SinglePointData> currentList = new ArrayList<SinglePointData>();
         int currentStatus = 0;
         for (SinglePointData posData : this.dataList) {
-            if (currentStatus == 0 && posData.getTurnSta() == 0) {
-                currentList.add(posData);
-            } else if (1 <= currentStatus && currentStatus <= 3) {
-                if (1 <= posData.getTurnSta() && posData.getTurnSta() <= 3) {
-                    currentList.add(posData);
-                }
-            } else if (-3 <= currentStatus && currentStatus <= -1) {
-                if (-3 <= posData.getTurnSta() && posData.getTurnSta() <= -1) {
-                    currentList.add(posData);
-                }
-            }else{
+            currentList.add(posData);
+            if (currentStatus == 0 && posData.getTurnSta() != 0) {
                 dataList.add(currentList);
                 currentList = new ArrayList<SinglePointData>();
+                currentList.add(posData);
+            } else if (1 <= currentStatus && currentStatus <= 3) {
+                if (posData.getTurnSta() < 1) {
+                    dataList.add(currentList);
+                    currentList.add(posData);
+                    currentList = new ArrayList<SinglePointData>();
+                }
+            } else if (-3 <= currentStatus && currentStatus <= -1) {
+                if (posData.getTurnSta() > -1) {
+                    dataList.add(currentList);
+                    currentList = new ArrayList<SinglePointData>();
+                    currentList.add(posData);
+                }
             }
             currentStatus = posData.getTurnSta();
+        }
+        if (currentList.size() > 0) {
+            dataList.add(currentList);
         }
         dataList.add(currentList);
         return dataList;
     }
-    
 
     public void setTurnSta(int startID, int endID, int turnSta) {
         int setSta[] = new int[3];
@@ -147,56 +156,103 @@ public class FullPointData {
     public void cheakTurning() {
         double angleVariation;
         double speed;
-        double distance_1 = 0;
-        double distance_2 = 0;
+        double distance1 = 0;
+        double distance2 = 0;
         int turnStartID = 0;
         int turnEndID;
         int turnDirection = 0;//1:左折, 2:右折
         int turnFlag = 1;//1:直進時, 2:右左折時
+        int turnCheakCount[] = {0, 0}; //左折カウント,右折カウント
+        ArrayList<Double> angleVariationList = new ArrayList<Double>();
+        ArrayList<Integer> cheakTurnList = new ArrayList<Integer>();
+
+        double angle1;//基準となる移動方向
+        double angle2;//移動した後の移動方向
 
         for (int dataID = 1; dataID <= this.dataList.size(); dataID++) {
             if (turnFlag == 1) {
                 //通常時 : 右左折開始を見つける
-                //速度が遅いデータを抽出
+                //速度が遅い:停止していないデータを抽出
                 speed = this.dataList.get(dataID - 1).getSpeed();
-                if (speed < this.TURNING_SPEED) {
-                    distance_1 = 0;
-                    //一定距離走行するまでループ
-                    for (int i = 0; distance_1 < this.TOTAL_DISTANCE; i++) {
-                        //dataListが無くなったら終了
-                        if (dataID + i >= this.dataList.size()) {
-                            return;
-                        }
-                        distance_1 = distance_1 + this.dataList.get(dataID - 1 + i).getDifferenceValue()[1];
-                        if (distance_1 < this.TOTAL_DISTANCE) {
-                            //変化角の計算
-                            if (this.dataList.get(dataID - 1 + i).getDifferenceValue()[0] - this.dataList.get(dataID - 1).getDifferenceValue()[0] > 0) {
-                                angleVariation = this.dataList.get(dataID - 1 + i).getDifferenceValue()[0] - this.dataList.get(dataID - 1).getDifferenceValue()[0];
-                            } else {
-                                angleVariation = 360 - this.dataList.get(dataID - 1 + i).getDifferenceValue()[0] + this.dataList.get(dataID - 1).getDifferenceValue()[0];
+                if (speed < TURNING_SPEED && speed > STOP_SPEED) {
+                    //移動距離から停止していないデータを抽出
+                    if (this.dataList.get(dataID - 1).getDifferenceValue()[1] > STOP_DISTANCE) {
+                        distance1 = 0;
+                        angle1 = this.dataList.get(dataID - 1).getDifferenceValue()[0];
+                        //一定距離走行するまでループ
+                        angleVariationList = new ArrayList<Double>();
+                        for (int i = 0; distance1 < this.TOTAL_DISTANCE; i++) {
+                            //dataListが無くなったら終了
+                            if (dataID + i >= this.dataList.size()) {
+                                return;
                             }
-                            //変化角が基準値を超えていた場合右左折開始
-                            if (angleVariation < 360 - this.ANGLE_VARIATION && angleVariation > 180) {
-                                turnStartID = dataID;
-                                turnFlag = 2;
-                                turnDirection = 1;
-                            } else if (angleVariation > this.ANGLE_VARIATION && angleVariation < 180) {
-                                turnStartID = dataID;
-                                turnFlag = 2;
-                                turnDirection = 2;
+                            angle2 = this.dataList.get(dataID - 1 + i).getDifferenceValue()[0];
+                            distance1 = distance1 + this.dataList.get(dataID - 1 + i).getDifferenceValue()[1];
+                            if (distance1 < this.TOTAL_DISTANCE && this.dataList.get(dataID - 1 + i).getSpeed() > STOP_SPEED) {
+                                //変化角の計算
+                                if (angle1 <= 0) {
+                                    if (angle1 <= angle2 && angle2 <= angle1 + 180) {
+                                        //angleが増えた場合(左折)
+                                        if (angle2 < 0) {
+                                            angleVariation = Math.abs(angle2 - angle1);
+                                        } else {
+                                            angleVariation = Math.abs(angle2 + angle1);
+                                        }
+                                    } else {
+                                        //angleが減った場合(右折)
+                                        if (angle2 < angle1) {
+                                            angleVariation = -Math.abs(angle2 - angle1);
+                                        } else {
+                                            angleVariation = -(360 - Math.abs(angle2 - angle1));
+                                        }
+                                    }
+                                } else {
+                                    if (angle1 >= angle2 && angle2 >= angle1 - 180) {
+                                        if (angle2 > 0) {
+                                            angleVariation = -Math.abs(angle2 - angle1);
+                                        } else {
+                                            angleVariation = -Math.abs(angle2 + angle1);
+                                        }
+                                    } else {
+                                        if (angle2 > angle1) {
+                                            angleVariation = Math.abs(angle2 - angle1);
+                                        } else {
+                                            angleVariation = (360 - Math.abs(angle2 - angle1));
+                                        }
+                                    }
+                                }
+                                angleVariationList.add(angleVariation);
                             }
                         }
+                        for (double angle : angleVariationList) {
+                            if (angle > this.ANGLE_VARIATION) {
+                                turnCheakCount[0]++;
+                            } else if (angle < -this.ANGLE_VARIATION) {
+                                turnCheakCount[1]++;
+                            }
+                        }
+                        if (turnCheakCount[0] > angleVariationList.size() * CHEAK_PROPORTION) {
+                            turnStartID = dataID;
+                            turnFlag = 2;
+                            turnDirection = 1;
+                        } else if (turnCheakCount[1] > angleVariationList.size() * CHEAK_PROPORTION) {
+                            turnStartID = dataID;
+                            turnFlag = 2;
+                            turnDirection = 2;
+                        }
+                        turnCheakCount[0] = 0;
+                        turnCheakCount[1] = 0;
                     }
                 }
             }
             if (turnFlag == 2) {
                 //右左折時 : 右左折終了を見つける
                 speed = this.dataList.get(dataID - 1).getSpeed();
-                distance_2 = distance_2 + this.dataList.get(dataID - 1).getDifferenceValue()[1];
-                if (speed > this.TURNING_SPEED || distance_2 > this.TOTAL_DISTANCE) {
+                distance2 = distance2 + this.dataList.get(dataID - 1).getDifferenceValue()[1];
+                if (speed > this.TURNING_SPEED || distance2 > this.TOTAL_DISTANCE) {
                     turnEndID = dataID;
                     turnFlag = 1;
-                    distance_2 = 0;
+                    distance2 = 0;
                     this.setTurnSta(turnStartID, turnEndID, turnDirection);
                 }
             }

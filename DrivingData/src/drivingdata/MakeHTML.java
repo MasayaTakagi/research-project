@@ -20,24 +20,24 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import parser.LogParser;
-import parser.CSVParser;
+import parser.MakeHTMLParser;
 import parser.CSVtoCSV;
-import parser.TurnCheakCheak;
+import parser.MakeCSVParser;
 
 /**
  *
  * @author ktajima
  */
-public class TurnCheak extends javax.swing.JFrame {
+public class MakeHTML extends javax.swing.JFrame {
 
     private LogParser parser;
 
     /**
      * Creates new form mainGUI
      */
-    public TurnCheak() {
+    public MakeHTML() {
         initComponents();
-        this.parser = new CSVParser();
+        this.parser = new MakeHTMLParser();
     }
 
     /**
@@ -190,19 +190,19 @@ public class TurnCheak extends javax.swing.JFrame {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TurnCheak.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MakeHTML.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            Logger.getLogger(TurnCheak.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MakeHTML.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(TurnCheak.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MakeHTML.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(TurnCheak.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MakeHTML.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new TurnCheak().setVisible(true);
+                new MakeHTML().setVisible(true);
             }
         });
     }

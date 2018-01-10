@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  *
  * @author ktajima
  */
-public class CSVParser implements LogParser {
+public class MakeHTMLParser implements LogParser {
 
     public static final Pattern DATA_PATTARN = Pattern.compile("([0-9]+)\t([0-9\\-]+)\t([0-9\\:]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([a-z]+)");
 
@@ -58,11 +58,12 @@ public class CSVParser implements LogParser {
                     String time = mc.group(3);
                     double lat = Double.parseDouble(mc.group(4));
                     double lng = Double.parseDouble(mc.group(5));
-                    double hight = Double.parseDouble(mc.group(6));
+                    double speed = Double.parseDouble(mc.group(6));
+                    double hight = Double.parseDouble(mc.group(7));
                     double[] posdouble = {lat, lng, hight};
                     //位置クラス（１つの点を表す）
                     GPSPosition pos = GPSPosition.parseFromDouble(posdouble);
-                    double speed = Double.parseDouble(mc.group(6));
+                    
 
                     SinglePointData data = new SinglePointData(ID, day, time, pos, speed);
                     fullData.addSinglePointData(data);
@@ -113,9 +114,8 @@ public class CSVParser implements LogParser {
                         writer.println("          strokeColor: '#000000',");
                     } else if (currentList.get(0).getTurnSta() > 0) {
                         writer.println("          strokeColor: '#0000FF',");
-
                     } else if (currentList.get(0).getTurnSta() < 0) {
-                        writer.println("          strokeColor: '#00ffff',");
+                        writer.println("          strokeColor: '#FF0000',");
                     }
                 }
                 writer.println("          strokeOpacity: 1.0,");
