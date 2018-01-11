@@ -3,12 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/takagi%20masaya/Documents/GitHub/research-project/DrivingData/src/data/FullPointData.java</file>
-            <file>file:/C:/Users/takagi%20masaya/Documents/GitHub/research-project/DrivingData/src/parser/CSVtoCSV.java</file>
-            <file>file:/C:/Users/takagi%20masaya/Documents/GitHub/research-project/DrivingData/src/parser/MakeCSVParser.java</file>
-            <file>file:/C:/Users/takagi%20masaya/Documents/GitHub/research-project/DrivingData/src/parser/MakeHTMLParser.java</file>
-            <file>file:/C:/Users/takagi%20masaya/Documents/GitHub/research-project/DrivingData/src/data/SinglePointData.java</file>
-            <file>file:/C:/Users/takagi%20masaya/Documents/GitHub/research-project/DrivingData/src/parser/CSVtoHTML.java</file>
+            <file>file:/C:/Users/takagi/Documents/GitHub/research-project/DrivingData/src/data/FullPointData.java</file>
+            <file>file:/C:/Users/takagi/Documents/GitHub/research-project/DrivingData/src/data/GPSPosition.java</file>
+            <file>file:/C:/Users/takagi/Documents/GitHub/research-project/DrivingData/src/drivingdata/MakeHTML.java</file>
         </group>
     </open-files>
 </project-private>
