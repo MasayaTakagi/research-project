@@ -59,7 +59,7 @@ public class MakeCSV extends javax.swing.JFrame {
 
         jLabel1.setText("ODBFile");
 
-        jTextField1.setText("C:\\Users\\takagi masaya\\Documents\\NetBeansProjects\\DrivingData\\2016_test.txt");
+        jTextField1.setText("C:\\Users\\takagi masaya\\Documents\\GitHub\\research-project\\DrivingData\\01_11_2.txt");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
