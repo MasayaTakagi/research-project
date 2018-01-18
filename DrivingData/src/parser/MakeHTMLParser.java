@@ -111,11 +111,11 @@ public class MakeHTMLParser implements LogParser {
                     writer.println("         var line" + i + "Path = new google.maps.Polyline({");
                     writer.println("          path: line" + i + ",");
                     if (currentList.get(0).getTurnSta() == 0) {
-                        writer.println("          strokeColor: '#000000',");
+                        writer.println("          strokeColor: '#00b3fd',");
                     } else if (currentList.get(0).getTurnSta() > 0) {
-                        writer.println("          strokeColor: '#0000FF',");
+                        writer.println("          strokeColor: '#ff9e00',");
                     } else if (currentList.get(0).getTurnSta() < 0) {
-                        writer.println("          strokeColor: '#FF0000',");
+                        writer.println("          strokeColor: '#ff0000',");
                     }
                 }
                 writer.println("          strokeOpacity: 1.0,");

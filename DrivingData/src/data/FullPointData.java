@@ -30,7 +30,9 @@ public class FullPointData {
     private final double STOP_DISTANCE = 1; //停止と判断する移動距離
     private final double TOTAL_DISTANCE = 30; //右左折中の上限移動距離
     private final double ANGLE_VARIATION = 60;  //右左折中の最小変化角
-    private final double CHEAK_PROPORTION = 0.5;  //右左折と判断する割合
+    private final double CHEAK_PROPORTION = 0.4;  //右左折と判断する割合
+    private final int LOG_ID_START = 961;
+    private final int LOG_ID_FINISH = 970;
 
     public FullPointData() {
 
@@ -181,7 +183,7 @@ public class FullPointData {
                         angle1 = this.dataList.get(dataID - 1).getDifferenceValue()[0];
                         //一定距離走行するまでループ
                         angleVariationList = new ArrayList<Double>();
-                        for (int i = 0; distance1 < this.TOTAL_DISTANCE; i++) {
+                        for (int i = 1; distance1 < this.TOTAL_DISTANCE; i++) {
                             //dataListが無くなったら終了
                             if (dataID + i >= this.dataList.size()) {
                                 return;
@@ -223,6 +225,10 @@ public class FullPointData {
                                 }
                                 angleVariationList.add(angleVariation);
                             }
+                        }
+                        if (dataID >=LOG_ID_START && dataID <= LOG_ID_FINISH) {
+                            System.out.println("----" + dataID + "----");
+                            System.out.println(angleVariationList);
                         }
                         for (double angle : angleVariationList) {
                             if (angle > this.ANGLE_VARIATION) {
