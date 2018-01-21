@@ -5,6 +5,9 @@
  */
 package data;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  *
  * @author takagi masaya
@@ -14,6 +17,7 @@ public class SinglePointData {
     public int ID;
     public String day;//yyyy-mm-dd
     public String time;//hh:mm:ss
+    public LocalDateTime date;
     public GPSPosition pos;
     public double speed;//km/s
     public double angle;//°
@@ -26,6 +30,10 @@ public class SinglePointData {
         this.time = time;
         this.pos = pos;
         this.speed = speed;
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        
+        this.date = LocalDateTime.parse(day +" "+ time, dtf);
 
     }
     

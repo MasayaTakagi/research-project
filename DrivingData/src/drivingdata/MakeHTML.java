@@ -30,15 +30,11 @@ import parser.MakeCSVParser;
  */
 public class MakeHTML extends javax.swing.JFrame {
 
-    private LogParser parser;
+    private MakeHTMLParser parser;
 
     /**
      * Creates new form mainGUI
      */
-    public MakeHTML() {
-        initComponents();
-        this.parser = new MakeHTMLParser();
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,6 +48,8 @@ public class MakeHTML extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jTextField2 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -73,7 +71,16 @@ public class MakeHTML extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("変換");
+        jButton3.setText("変換");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jTextField2.setText("jTextField2");
+
+        jButton2.setText("参照");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -89,13 +96,18 @@ public class MakeHTML extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
-                            .addComponent(jLabel1)))
+                                .addComponent(jButton1))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(169, 169, 169)
+                        .addComponent(jButton3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -108,8 +120,12 @@ public class MakeHTML extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(jButton3)
                 .addContainerGap())
         );
 
@@ -140,18 +156,17 @@ public class MakeHTML extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 
-        parser.setTimeZone(0);
-
-        File inputfile = new File(this.jTextField1.getText());
-        String filename = inputfile.getName().substring(0, inputfile.getName().lastIndexOf("."));
-        File saveDir = inputfile.getParentFile();
+        File inputGPSFile = new File(this.jTextField1.getText());
+        File inputGazeFile = new File(this.jTextField2.getText());
+        String filename = inputGPSFile.getName().substring(0, inputGPSFile.getName().lastIndexOf("."));
+        File saveDir = inputGPSFile.getParentFile();
         //saveDir.mkdirs();
         File outputFile = new File(saveDir.getPath() + File.separator + filename + ".html");
 
         try {
-            parser.parseLog(inputfile, outputFile);
+            parser.parseDoubleLog(inputGPSFile,inputGazeFile, outputFile);
             this.printMessage("変換が完了しました", "変換完了");
 
             //自動ファイルオープン
@@ -169,11 +184,37 @@ public class MakeHTML extends javax.swing.JFrame {
             this.printError("ファイルの変換に失敗しました。");
         }
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        JFileChooser chooser = new JFileChooser();
+        if (!this.jTextField2.getText().equals("")) {
+            File cd = new File(this.jTextField2.getText());
+            if (cd.exists()) {
+                if (cd.isDirectory()) {
+                    chooser.setCurrentDirectory(cd);
+                } else {
+                    chooser.setCurrentDirectory(cd.getParentFile());
+                }
+            }
+        }
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File srcfile = chooser.getSelectedFile();
+            this.jTextField2.setText(srcfile.getPath());
+            if (this.jTextField2.getText().equals("")) {
+                this.jTextField2.setText(srcfile.getParentFile().getPath());
+            }
+
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     public void printMessage(String msg, String title) {
         JOptionPane.showMessageDialog(this, msg, title, JOptionPane.INFORMATION_MESSAGE);
@@ -209,7 +250,9 @@ public class MakeHTML extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,6 +7,8 @@ package parser;
 import data.FullPointData;
 import data.GPSPosition;
 import data.SinglePointData;
+import data.SingleGazeData;
+import data.FullGazeData;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,16 +25,16 @@ import java.util.regex.Pattern;
  *
  * @author ktajima
  */
-public class MakeHTMLParser implements LogParser {
+public class MakeHTMLParser{
 
-    public static final Pattern DATA_PATTARN = Pattern.compile("([0-9]+)\t([0-9\\-]+)\t([0-9\\:]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([a-z]+)");
+    public static final Pattern GPS_PATTARN = Pattern.compile("([0-9]+)\t([0-9\\-]+)\t([0-9\\:]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([a-z]+)");
+    public static final Pattern GAZE_PATTARN = Pattern.compile("([0-9\\]+),([0-9\\]+),([0-9\\:]+)");
 
-    @Override
-    public void parseLog(File inputFile, File outputFile) throws IOException {
+    public void parseDoubleLog(File inputGPSFile, File inputGazeFile, File outputFile) throws IOException {
         //実際に変換するメソッド
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8"));
-
         String Line;
+        
         //header.txtを読み込んで出力
         BufferedReader headerreader = new BufferedReader(new InputStreamReader(new FileInputStream("haeder.txt"), "UTF-8"));
         while ((Line = headerreader.readLine()) != null) {
@@ -41,17 +43,18 @@ public class MakeHTMLParser implements LogParser {
         headerreader.close();
 
         //データ部分を読み込み
-        FullPointData fullData = new FullPointData();
+        FullPointData fullGPSData = new FullPointData();
+        FullGazeData fullGazeData = new FullGazeData();
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF-8"));
+        BufferedReader reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(inputGPSFile), "UTF-8"));
 
-        while ((Line = reader.readLine()) != null) {
+        while ((Line = reader1.readLine()) != null) {
             if (Line.startsWith("//")) {
                 //何もしない
             } else {
                 //データサンプル(タブ区切り)                
                 //10	2016-12-19	15:38:09	35.43132	136.62603	51.800	33.0	false
-                Matcher mc = DATA_PATTARN.matcher(Line);
+                Matcher mc = GPS_PATTARN.matcher(Line);
                 if (mc.matches()) {
                     int ID = Integer.parseInt(mc.group(1));
                     String day = mc.group(2);
@@ -66,22 +69,47 @@ public class MakeHTMLParser implements LogParser {
                     
 
                     SinglePointData data = new SinglePointData(ID, day, time, pos, speed);
-                    fullData.addSinglePointData(data);
+                    fullGPSData.addSinglePointData(data);
+                }
+            }
+        }
+        
+        reader1.close();
+        
+        BufferedReader reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(inputGazeFile), "UTF-8"));
+
+        int data2_id = 1;
+        
+        while ((Line = reader2.readLine()) != null) {
+            if (Line.startsWith("//")) {
+                //何もしない
+            } else {
+                //データサンプル(カンマ区切り)                
+                //903,179,01:18:12
+                Matcher mc = GAZE_PATTARN.matcher(Line);
+                if (mc.matches()) {
+                    int x = Integer.parseInt(mc.group(1));
+                    int y = Integer.parseInt(mc.group(2));
+                    String date = mc.group(3);                
+
+                    SingleGazeData data = new SingleGazeData(data2_id, x, y, date);
+                    fullGazeData.addSingleGazeData(data);
+                    data2_id++;
                 }
             }
         }
 
-        reader.close();
+        reader2.close();
 
         //最後の点を取得
         GPSPosition lastPos = null;
-        if (fullData.getDataSize() > 0) {
-            lastPos = fullData.getLastPosition();
+        if (fullGPSData.getDataSize() > 0) {
+            lastPos = fullGPSData.getLastPosition();
         }
 
-        fullData.calculateAllDifferenceValue();
-        fullData.cheakTurning();
-        ArrayList<ArrayList<SinglePointData>> dataList = fullData.makeDataList();
+        fullGPSData.calculateAllDifferenceValue();
+        fullGPSData.cheakTurning();
+        ArrayList<ArrayList<SinglePointData>> dataList = fullGPSData.makeDataList();
 
         //プログラムの出力
         writer.println("      var mapOptions = {");
@@ -134,16 +162,6 @@ public class MakeHTMLParser implements LogParser {
         fooderreader.close();
 
         writer.close();
-    }
-
-    @Override
-    public String getParserName() {
-        return "CSVParser";
-    }
-
-    @Override
-    public void setTimeZone(int plusGMT) {
-        return;
     }
 
 }
