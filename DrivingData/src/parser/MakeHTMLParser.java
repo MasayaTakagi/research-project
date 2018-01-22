@@ -110,6 +110,7 @@ public class MakeHTMLParser{
         fullGPSData.calculateAllDifferenceValue();
         fullGPSData.cheakTurning();
         ArrayList<ArrayList<SinglePointData>> dataList = fullGPSData.makeDataList();
+        ArrayList<SinglePointData> sideCheakList = fullGPSData.makeSideCheakList(fullGazeData.cheakSide());
 
         //プログラムの出力
         writer.println("      var mapOptions = {");
@@ -130,8 +131,8 @@ public class MakeHTMLParser{
                 i++;
                 if (currentList.size() > 0) {
                     writer.println("        var line" + i + " = [");
-                    for (SinglePointData posData : currentList) {
-                        double[] posdouble = posData.getPosition().getPositonByDoubleDegreeValue();
+                    for (SinglePointData posData1 : currentList) {
+                        double[] posdouble = posData1.getPosition().getPositonByDoubleDegreeValue();
                         writer.println("            new google.maps.LatLng(" + posdouble[0] + "," + posdouble[1] + "),");
 
                     }
@@ -150,6 +151,18 @@ public class MakeHTMLParser{
                 writer.println("          strokeWeight: 5");
                 writer.println("        });");
                 writer.println("        line" + i + "Path.setMap(map);");
+            }
+        }
+        
+        if(sideCheakList.size() > 0){
+            int i = 0;
+            for(SinglePointData posData2 : sideCheakList){
+                double[] posdouble = posData2.getPosition().getPositonByDoubleDegreeValue();
+                writer.println("        var latlng"+ i +" = new google.maps.LatLng(" + posdouble[0] + "," + posdouble[1] + ");");
+                writer.println("        var marker" + i + " = new google.maps.Marker({");
+                writer.println("        position: latlng" + i + ",");
+                writer.println("        map: map");
+                writer.println("        });");
             }
         }
 

@@ -6,6 +6,7 @@
 package data;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -61,14 +62,6 @@ public class SinglePointData {
         return this.ID;
     }
 
-    public String getDay() {
-        return this.day;
-    }
-
-    public String getTime() {
-        return this.time;
-    }
-
     public GPSPosition getPosition() {
         return this.pos;
     }
@@ -85,6 +78,10 @@ public class SinglePointData {
     public int getTurnSta() {
         return this.turnSta;
     }
+    
+    public LocalTime getTime(){
+        return this.date.toLocalTime();
+    } 
     
     public String writeOut(){
         String strID = String.valueOf(this.ID);

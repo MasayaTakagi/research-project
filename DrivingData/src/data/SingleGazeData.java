@@ -6,6 +6,7 @@
 package data;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -33,6 +34,10 @@ public class SingleGazeData {
 
     public LocalDateTime getDate() {
         return this.date;
+    }
+    
+    public LocalTime getTime() {
+        return this.date.toLocalTime();
     }
     
     public int[] getMatrix(){

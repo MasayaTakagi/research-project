@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -267,6 +269,20 @@ public class FullPointData {
 
     public void cheakLaneChanging() {
 
+    }
+    
+    public ArrayList<SinglePointData> makeSideCheakList(ArrayList<LocalTime> timeList){
+        ArrayList<SinglePointData> sideCheakList = new ArrayList<SinglePointData>();
+        for(LocalTime time1:timeList){
+            for(int dataID = 1; dataID <= this.dataList.size(); dataID++){
+                LocalTime time2 = this.dataList.get(dataID).getTime();
+                if(time2.compareTo(time1) == 0){
+                    sideCheakList.add(this.dataList.get(dataID));
+                    break;
+                }
+            }
+        }
+        return sideCheakList;
     }
 
     public void writeOutAll(File outputFile) throws IOException {
