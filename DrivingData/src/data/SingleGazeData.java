@@ -16,28 +16,31 @@ import java.time.format.DateTimeFormatter;
 public class SingleGazeData {
 
     public int ID;
-    public int matrix[];
-    public LocalDateTime date;
+    public int matrix[] = new int[2];
+    public LocalTime date;
+    public String time;
+    
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    public SingleGazeData(int ID, int matrix_x, int matrix_y, String date) {
+    public SingleGazeData(int ID, int matrix_x, int matrix_y, String time) {
         this.ID = ID;
         this.matrix[0] = matrix_x;
         this.matrix[1] = matrix_y;
+        this.time = time;
+        this.date = LocalTime.parse(time, dtf);
         
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-        this.date = LocalDateTime.parse(date, dtf);
     }
     
     public int getID() {
         return this.ID;
     }
 
-    public LocalDateTime getDate() {
+    public LocalTime getDate() {
         return this.date;
     }
     
-    public LocalTime getTime() {
-        return this.date.toLocalTime();
+    public String getTime() {
+        return this.time;
     }
     
     public int[] getMatrix(){

@@ -19,9 +19,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import parser.LogParser;
-import parser.MakeHTMLParser;
-import parser.CSVtoCSV;
+import parser.LogDoubleParser;
+import parser.MakeHTML2Parser;
 
 /**
  *
@@ -29,12 +28,12 @@ import parser.CSVtoCSV;
  */
 public class DrivingData extends javax.swing.JFrame {
 
-    private LogParser parser;
+    private LogDoubleParser parser;
     
     /** Creates new form mainGUI */
     public DrivingData() {
         initComponents();
-        this.parser = new CSVtoCSV();
+        this.parser = new MakeHTML2Parser();
     }
 
     /** This method is called from within the constructor to
@@ -49,12 +48,15 @@ public class DrivingData extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("OBD2HTML");
 
-        jLabel1.setText("ODBFile");
+        jLabel1.setText("GPSFile");
 
         jTextField1.setText("C:\\Users\\takagi masaya\\Documents\\NetBeansProjects\\DrivingData\\2016_test.txt");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -70,51 +72,107 @@ public class DrivingData extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("変換");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.setText("変換");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButton3ActionPerformed(evt);
             }
         });
+
+        jLabel2.setText("GazeFile");
+
+        jTextField2.setText("jTextField2");
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("参照");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
-                            .addComponent(jLabel1)))
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(169, 169, 169)
-                        .addComponent(jButton2)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(25, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addGap(174, 174, 174))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
+                .addGap(23, 23, 23)
+                .addComponent(jButton3)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+        parser.setTimeZone(0);
+
+        File inputGPSFile = new File(this.jTextField1.getText());
+        File inputGazeFile = new File(this.jTextField2.getText());
+        String filename = inputGPSFile.getName().substring(0, inputGPSFile.getName().lastIndexOf("."));
+        File saveDir = inputGPSFile.getParentFile();
+        //saveDir.mkdirs();
+        File outputFile = new File(saveDir.getPath() + File.separator + filename + ".html");
+
+        try {
+            parser.parseDoubleLog(inputGPSFile,inputGazeFile , outputFile);
+            this.printMessage("変換が完了しました", "変換完了");
+
+            //自動ファイルオープン
+            Desktop desktop = Desktop.getDesktop();
+            //ファイルオープンをサポートしている場合にはCSVファイルを表示する。
+            if (desktop.isSupported(Desktop.Action.OPEN)) {
+                try {
+                    desktop.open(outputFile);
+                } catch (IOException e) {
+                }
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            this.printError("ファイルの変換に失敗しました。");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser();
         if (!this.jTextField1.getText().equals("")) {
             File cd = new File(this.jTextField1.getText());
             if (cd.exists()) {
@@ -137,43 +195,33 @@ public class DrivingData extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
-        parser.setTimeZone(0);
-
-        File inputfile = new File(this.jTextField1.getText());
-        String filename = inputfile.getName().substring(0, inputfile.getName().lastIndexOf("."));
-        File saveDir = inputfile.getParentFile();
-        //saveDir.mkdirs();
-        File outputCSV = new File(saveDir.getPath() + File.separator + filename + "_csv.txt");
-        
-        
-        try {
-            parser.parseLog(inputfile, outputCSV);
-            this.printMessage("変換が完了しました", "変換完了");
-            
-            
-            //自動ファイルオープン
-            Desktop desktop = Desktop.getDesktop();
-            //ファイルオープンをサポートしている場合にはCSVファイルを表示する。
-            if (desktop.isSupported(Desktop.Action.OPEN)) {
-                try {
-                    desktop.open(outputCSV);
-                } catch (IOException e) {
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        JFileChooser chooser = new JFileChooser();
+        if (!this.jTextField2.getText().equals("")) {
+            File cd = new File(this.jTextField2.getText());
+            if (cd.exists()) {
+                if (cd.isDirectory()) {
+                    chooser.setCurrentDirectory(cd);
+                } else {
+                    chooser.setCurrentDirectory(cd.getParentFile());
+                }
             }
         }
-            
-            
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            this.printError("ファイルの変換に失敗しました。");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File srcfile = chooser.getSelectedFile();
+            this.jTextField2.setText(srcfile.getPath());
+            if (this.jTextField2.getText().equals("")) {
+                this.jTextField2.setText(srcfile.getParentFile().getPath());
+            }
         }
-
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    } 
+    
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jTextField2ActionPerformed
     
     public void printMessage(String msg, String title) {
         JOptionPane.showMessageDialog(this, msg, title, JOptionPane.INFORMATION_MESSAGE);
@@ -209,7 +257,10 @@ public class DrivingData extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

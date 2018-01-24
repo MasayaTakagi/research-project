@@ -21,8 +21,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import parser.LogParser;
 import parser.MakeHTMLParser;
-import parser.CSVtoCSV;
-import parser.MakeCSVParser;
 
 /**
  *
@@ -30,12 +28,17 @@ import parser.MakeCSVParser;
  */
 public class MakeHTML extends javax.swing.JFrame {
 
-    private MakeHTMLParser parser;
+    private LogParser parser;
 
     /**
      * Creates new form mainGUI
      */
 
+    public MakeHTML() {
+        initComponents();
+        this.parser = new MakeHTMLParser();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,8 +52,6 @@ public class MakeHTML extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("OBD2HTML");
@@ -78,15 +79,6 @@ public class MakeHTML extends javax.swing.JFrame {
             }
         });
 
-        jTextField2.setText("jTextField2");
-
-        jButton2.setText("参照");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,12 +95,7 @@ public class MakeHTML extends javax.swing.JFrame {
                                 .addComponent(jButton1))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(169, 169, 169)
-                        .addComponent(jButton3))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(jButton3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -120,11 +107,7 @@ public class MakeHTML extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addComponent(jButton3)
                 .addContainerGap())
         );
@@ -158,15 +141,14 @@ public class MakeHTML extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 
-        File inputGPSFile = new File(this.jTextField1.getText());
-        File inputGazeFile = new File(this.jTextField2.getText());
-        String filename = inputGPSFile.getName().substring(0, inputGPSFile.getName().lastIndexOf("."));
-        File saveDir = inputGPSFile.getParentFile();
+        File inputFile = new File(this.jTextField1.getText());
+        String filename = inputFile.getName().substring(0, inputFile.getName().lastIndexOf("."));
+        File saveDir = inputFile.getParentFile();
         //saveDir.mkdirs();
         File outputFile = new File(saveDir.getPath() + File.separator + filename + ".html");
 
         try {
-            parser.parseDoubleLog(inputGPSFile,inputGazeFile, outputFile);
+            parser.parseLog(inputFile, outputFile);
             this.printMessage("変換が完了しました", "変換完了");
 
             //自動ファイルオープン
@@ -189,32 +171,6 @@ public class MakeHTML extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
-        JFileChooser chooser = new JFileChooser();
-        if (!this.jTextField2.getText().equals("")) {
-            File cd = new File(this.jTextField2.getText());
-            if (cd.exists()) {
-                if (cd.isDirectory()) {
-                    chooser.setCurrentDirectory(cd);
-                } else {
-                    chooser.setCurrentDirectory(cd.getParentFile());
-                }
-            }
-        }
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-        int returnVal = chooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File srcfile = chooser.getSelectedFile();
-            this.jTextField2.setText(srcfile.getPath());
-            if (this.jTextField2.getText().equals("")) {
-                this.jTextField2.setText(srcfile.getParentFile().getPath());
-            }
-
-        }
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     public void printMessage(String msg, String title) {
         JOptionPane.showMessageDialog(this, msg, title, JOptionPane.INFORMATION_MESSAGE);
@@ -249,10 +205,8 @@ public class MakeHTML extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

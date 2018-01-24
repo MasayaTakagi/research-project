@@ -20,25 +20,25 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import parser.LogParser;
-import parser.MakeHTMLParser;
-import parser.MakeCSVParser;
+import parser.GazeCheakParser;
 
 /**
  *
  * @author ktajima
  */
-public class MakeCSV extends javax.swing.JFrame {
+public class GazeCheak extends javax.swing.JFrame {
 
     private LogParser parser;
 
     /**
      * Creates new form mainGUI
      */
-    public MakeCSV() {
-        initComponents();
-        this.parser = new MakeCSVParser();
-    }
 
+    public GazeCheak() {
+        initComponents();
+        this.parser = new GazeCheakParser();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -51,14 +51,14 @@ public class MakeCSV extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("OBD2HTML");
 
         jLabel1.setText("ODBFile");
 
-        jTextField1.setText("C:\\Users\\takagi\\Documents\\GitHub\\research-project\\DrivingData\\01_11_2.txt");
+        jTextField1.setText("C:\\Users\\takagi masaya\\Documents\\GitHub\\research-project\\DrivingData\\Gaze_01_23_2.txt");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -72,10 +72,10 @@ public class MakeCSV extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("変換");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.setText("変換");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -88,14 +88,14 @@ public class MakeCSV extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
-                            .addComponent(jLabel1)))
+                                .addComponent(jButton1))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(169, 169, 169)
-                        .addComponent(jButton2)))
+                        .addComponent(jButton3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -107,8 +107,8 @@ public class MakeCSV extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addComponent(jButton3)
                 .addContainerGap())
         );
 
@@ -139,36 +139,24 @@ public class MakeCSV extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 
-        parser.setTimeZone(0);
-
-        File inputfile = new File(this.jTextField1.getText());
-        String filename = inputfile.getName().substring(0, inputfile.getName().lastIndexOf("."));
-        File saveDir = inputfile.getParentFile();
+        File inputFile = new File(this.jTextField1.getText());
+        String filename = inputFile.getName().substring(0, inputFile.getName().lastIndexOf("."));
+        File saveDir = inputFile.getParentFile();
         //saveDir.mkdirs();
-        File outputFile = new File(saveDir.getPath() + File.separator + filename + "_csv.txt");
+        File outputFile = new File(saveDir.getPath() + File.separator + filename + ".html");
 
         try {
-            parser.parseLog(inputfile, outputFile);
+            parser.parseLog(inputFile, outputFile);
             this.printMessage("変換が完了しました", "変換完了");
-
-            //自動ファイルオープン
-            Desktop desktop = Desktop.getDesktop();
-            //ファイルオープンをサポートしている場合にはCSVファイルを表示する。
-            if (desktop.isSupported(Desktop.Action.OPEN)) {
-                try {
-                    desktop.open(outputFile);
-                } catch (IOException e) {
-                }
-            }
 
         } catch (IOException ex) {
             ex.printStackTrace();
             this.printError("ファイルの変換に失敗しました。");
         }
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
@@ -189,25 +177,25 @@ public class MakeCSV extends javax.swing.JFrame {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MakeCSV.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GazeCheak.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            Logger.getLogger(MakeCSV.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GazeCheak.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(MakeCSV.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GazeCheak.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(MakeCSV.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GazeCheak.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new MakeCSV().setVisible(true);
+                new GazeCheak().setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables

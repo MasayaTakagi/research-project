@@ -25,12 +25,12 @@ import java.util.regex.Pattern;
  *
  * @author ktajima
  */
-public class MakeHTMLParser implements LogParser {
+public class MakeHTML2Parser implements LogDoubleParser {
 
     public static final Pattern GPS_PATTARN = Pattern.compile("([0-9]+)\t([0-9\\-]+)\t([0-9\\:]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([0-9\\.]+)\t([a-z]+)");
 
     @Override
-    public void parseLog(File inputFile, File outputFile) throws IOException {
+    public void parseDoubleLog(File inputGPSFile,File inputGazeFile , File outputFile) throws IOException {
         //実際に変換するメソッド
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8"));
         String Line;
@@ -42,11 +42,10 @@ public class MakeHTMLParser implements LogParser {
         }
         headerreader.close();
 
-        //データ部分を読み込み
+        /*------------位置情報を読み込み-------------*/
         FullPointData fullGPSData = new FullPointData();
 
-        BufferedReader reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF-8"));
-
+        BufferedReader reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(inputGPSFile), "UTF-8"));
         while ((Line = reader1.readLine()) != null) {
             if (Line.startsWith("//")) {
                 //何もしない
@@ -66,16 +65,39 @@ public class MakeHTMLParser implements LogParser {
                     //位置クラス（１つの点を表す）
                     GPSPosition pos = GPSPosition.parseFromDouble(posdouble);
                     
-
                     SinglePointData data = new SinglePointData(ID, day, time, pos, speed);
                     fullGPSData.addSinglePointData(data);
                 }
             }
         }
-        
         reader1.close();
         
-
+        /*------------視線情報を読み込み-------------*/
+        FullGazeData fullGazeData = new FullGazeData();
+        BufferedReader reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(inputGazeFile), "UTF-8"));     
+        int data2_id = 1;
+        
+        while ((Line = reader2.readLine()) != null) {
+            if (Line.startsWith("//")) {
+                //何もしない
+            } else {
+                //データサンプル(カンマ区切り)                
+                //903,179,01:18:12
+                String[] data =  Line.split(Pattern.quote(","));
+                if (data.length == 3 ) {
+                    int x = Integer.parseInt(data[0]);
+                    int y = Integer.parseInt(data[1]);          
+                    String time = data[2];
+                    
+                    SingleGazeData Data = new SingleGazeData(data2_id, x, y, time);
+                    fullGazeData.addSingleGazeData(Data);
+                    data2_id++;
+                }
+            }
+        }
+        reader2.close();
+        
+        /*------------データ処理開始-------------*/  
         //最後の点を取得
         GPSPosition lastPos = null;
         if (fullGPSData.getDataSize() > 0) {
@@ -85,8 +107,9 @@ public class MakeHTMLParser implements LogParser {
         fullGPSData.calculateAllDifferenceValue();
         fullGPSData.cheakTurning();
         ArrayList<ArrayList<SinglePointData>> dataList = fullGPSData.makeDataList();
+        ArrayList<SinglePointData> sideCheakList = fullGPSData.makeSideCheakList(fullGazeData.cheakSide());
 
-        //プログラムの出力
+        /*------------Googlemap出力開始-------------*/ 
         writer.println("      var mapOptions = {");
         writer.println("          zoom: 15,");
         if (lastPos != null) {
@@ -128,21 +151,30 @@ public class MakeHTMLParser implements LogParser {
             }
         }
         
+        if(sideCheakList.size() > 0){
+            int i = 0;
+            for(SinglePointData posData2 : sideCheakList){
+                double[] posdouble = posData2.getPosition().getPositonByDoubleDegreeValue();
+                writer.println("        var latlng"+ i +" = new google.maps.LatLng(" + posdouble[0] + "," + posdouble[1] + ");");
+                writer.println("        var marker" + i + " = new google.maps.Marker({");
+                writer.println("        position: latlng" + i + ",");
+                writer.println("        map: map");
+                writer.println("        });");
+            }
+        }     
 
-//fooder.txtを読み込んで出力
+        //fooder.txtを読み込んで出力
         BufferedReader fooderreader = new BufferedReader(new InputStreamReader(new FileInputStream("fooder.txt"), "UTF-8"));
         while ((Line = fooderreader.readLine()) != null) {
             writer.println(Line);
         }
-
         fooderreader.close();
-
         writer.close();
     }
     
         @Override
     public String getParserName() {
-        return "TurnCheakCheak";
+        return "MakeHTML2Parser";
     }
 
     @Override

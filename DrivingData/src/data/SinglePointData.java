@@ -18,24 +18,23 @@ public class SinglePointData {
     public int ID;
     public String day;//yyyy-mm-dd
     public String time;//hh:mm:ss
-    public LocalDateTime date;
+    public LocalTime date;
     public GPSPosition pos;
     public double speed;//km/s
     public double angle;//°
     public double distance;//m
     public int turnSta;//0:通常 1:左折開始 2:左折中 3:左折終了 -1:右折開始 -2:右折中 -3:右折終了
+    
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     public SinglePointData(int ID, String day, String time, GPSPosition pos, double speed) {
         this.ID = ID;
         this.day = day;
         this.time = time;
         this.pos = pos;
-        this.speed = speed;
+        this.speed = speed;       
+        this.date = LocalTime.parse(time, dtf);
         
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        
-        this.date = LocalDateTime.parse(day +" "+ time, dtf);
-
     }
     
     public SinglePointData(int ID, String day, String time, GPSPosition pos, double speed,double angle,double distance) {
@@ -80,7 +79,7 @@ public class SinglePointData {
     }
     
     public LocalTime getTime(){
-        return this.date.toLocalTime();
+        return this.date;
     } 
     
     public String writeOut(){
