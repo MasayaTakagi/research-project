@@ -24,7 +24,8 @@ public class SinglePointData {
     public double angle;//°
     public double distance;//m
     public int turnSta;//0:通常 1:左折開始 2:左折中 3:左折終了 -1:右折開始 -2:右折中 -3:右折終了
-    
+    public int cheakSideSta;//0:通常 1:側方確認 2:交差点付近での側方確認
+
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     public SinglePointData(int ID, String day, String time, GPSPosition pos, double speed) {
@@ -32,12 +33,12 @@ public class SinglePointData {
         this.day = day;
         this.time = time;
         this.pos = pos;
-        this.speed = speed;       
+        this.speed = speed;
         this.date = LocalTime.parse(time, dtf);
-        
+
     }
-    
-    public SinglePointData(int ID, String day, String time, GPSPosition pos, double speed,double angle,double distance) {
+
+    public SinglePointData(int ID, String day, String time, GPSPosition pos, double speed, double angle, double distance) {
         this.ID = ID;
         this.day = day;
         this.time = time;
@@ -47,14 +48,18 @@ public class SinglePointData {
         this.distance = distance;
 
     }
-    
-    public void setDifferenceValue(double angle,double distance){
+
+    public void setDifferenceValue(double angle, double distance) {
         this.angle = angle;
         this.distance = distance;
     }
-    
-    public void setTurnSta(int turnSta){
+
+    public void setTurnSta(int turnSta) {
         this.turnSta = turnSta;
+    }
+
+    public void setCheakSideSta(int cheakSideSta) {
+        this.cheakSideSta = cheakSideSta;
     }
 
     public int getID() {
@@ -68,21 +73,25 @@ public class SinglePointData {
     public double getSpeed() {
         return this.speed;
     }
-    
-    public double[] getDifferenceValue(){
+
+    public double[] getDifferenceValue() {
         double[] differenceValue = {this.angle, this.distance};
         return differenceValue;
     }
-    
+
     public int getTurnSta() {
         return this.turnSta;
     }
-    
-    public LocalTime getTime(){
+
+    public int getCheakSideSta() {
+        return this.cheakSideSta;
+    }
+
+    public LocalTime getTime() {
         return this.date;
-    } 
-    
-    public String writeOut(){
+    }
+
+    public String writeOut() {
         String strID = String.valueOf(this.ID);
         String strDay = this.day;
         String strTime = this.time;
@@ -93,8 +102,8 @@ public class SinglePointData {
         String strAngle = String.valueOf(this.angle);
         String strDistance = String.valueOf(this.distance);
         String strTurnSta = String.valueOf(this.turnSta);
-        
-        return strID+"\t"+strDay+"\t"+strTime+"\t"+strLat+"\t"+strLng+"\t"+strHeight+"\t"+strSpeed+"\t"+strAngle+"\t"+strDistance+"\t"+strTurnSta;
+
+        return strID + "\t" + strDay + "\t" + strTime + "\t" + strLat + "\t" + strLng + "\t" + strHeight + "\t" + strSpeed + "\t" + strAngle + "\t" + strDistance + "\t" + strTurnSta;
     }
 
 }

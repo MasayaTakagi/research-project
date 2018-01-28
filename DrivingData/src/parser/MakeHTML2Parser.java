@@ -44,7 +44,7 @@ public class MakeHTML2Parser implements LogDoubleParser {
         FullPointData fullGPSData = new FullPointData();
         BufferedReader reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(inputGPSFile), "UTF-8"));
         int data1_id = 1;
-        
+
         while ((Line = reader1.readLine()) != null) {
             if (Line.startsWith("//")) {
                 //何もしない
@@ -156,7 +156,10 @@ public class MakeHTML2Parser implements LogDoubleParser {
                 writer.println("        var latlng" + i + " = new google.maps.LatLng(" + posdouble[0] + "," + posdouble[1] + ");");
                 writer.println("        var marker" + i + " = new google.maps.Marker({");
                 writer.println("        position: latlng" + i + ",");
-                writer.println("        map: map");
+                writer.println("        map: map,");
+                if (posData2.getCheakSideSta() == 2) {
+                    writer.println("        animation: google.maps.Animation.DROP");
+                }
                 writer.println("        });");
             }
         }

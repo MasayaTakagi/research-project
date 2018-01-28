@@ -278,6 +278,14 @@ public class FullPointData {
                 LocalTime time2 = this.dataList.get(dataID - 1).getTime();
                 if (time2.compareTo(time1) == 0) {
                     sideCheakList.add(this.dataList.get(dataID - 1));
+                    this.getSinglePointData(dataID).setCheakSideSta(1);
+                    System.out.println(dataID);
+                    for (int i = 0; i < 4 && dataID + i < this.getDataSize(); i++) {
+                        System.out.println(this.getSinglePointData(dataID + i).getTurnSta());
+                        if (this.getSinglePointData(dataID + i).getTurnSta() > 0) {
+                            this.getSinglePointData(dataID).setCheakSideSta(2);
+                        }
+                    }
                     break;
                 }
             }
