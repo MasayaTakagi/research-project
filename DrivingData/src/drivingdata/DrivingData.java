@@ -58,7 +58,7 @@ public class DrivingData extends javax.swing.JFrame {
 
         jLabel1.setText("GPSFile");
 
-        jTextField1.setText("C:\\Users\\takagi masaya\\Documents\\NetBeansProjects\\DrivingData\\2016_test.txt");
+        jTextField1.setText("C:\\Users\\takagi masaya\\Documents\\GitHub\\research-project\\DrivingData\\01_23_2.txt");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -81,7 +81,7 @@ public class DrivingData extends javax.swing.JFrame {
 
         jLabel2.setText("GazeFile");
 
-        jTextField2.setText("jTextField2");
+        jTextField2.setText("C:\\Users\\takagi masaya\\Documents\\GitHub\\research-project\\DrivingData\\Gaze_01_23_2.txt");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -89,6 +89,11 @@ public class DrivingData extends javax.swing.JFrame {
         });
 
         jButton2.setText("参照");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -195,7 +200,12 @@ public class DrivingData extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         JFileChooser chooser = new JFileChooser();
         if (!this.jTextField2.getText().equals("")) {
             File cd = new File(this.jTextField2.getText());
@@ -217,11 +227,7 @@ public class DrivingData extends javax.swing.JFrame {
                 this.jTextField2.setText(srcfile.getParentFile().getPath());
             }
         }
-    } 
-    
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_jButton2ActionPerformed
     
     public void printMessage(String msg, String title) {
         JOptionPane.showMessageDialog(this, msg, title, JOptionPane.INFORMATION_MESSAGE);

@@ -31,9 +31,9 @@ public class MakeCSVParser implements LogParser {
     public void parseLog(File inputFile, File outputFile) throws IOException {
         /**実際に変換するメソッド*/     
         //データ部分を読み込み
-        FullPointData fullData = new FullPointData();
-
+        FullPointData fullGPSData = new FullPointData();
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF-8"));
+        int data1_id = 1;
         String Line;
         
         while ((Line = reader.readLine()) != null) {
@@ -41,34 +41,34 @@ public class MakeCSVParser implements LogParser {
                 //何もしない
             } else {
                 //データサンプル(タブ区切り)                
-                //10	2016-12-19	15:38:09	35.43132	136.62603	51.800	33.0	false
-                Matcher mc = DATA_PATTARN.matcher(Line);
-                if (mc.matches()) {
-                    int ID = Integer.parseInt(mc.group(1));
-                    String day = mc.group(2);
-                    String time = mc.group(3);
-                    double lat = Double.parseDouble(mc.group(4));
-                    double lng = Double.parseDouble(mc.group(5));
-                    double speed = Double.parseDouble(mc.group(6));
-                    double hight = Double.parseDouble(mc.group(7));
-                    double[] posdouble = {lat, lng, hight};
-                    //位置クラス（１つの点を表す）
-                    GPSPosition pos = GPSPosition.parseFromDouble(posdouble);
-                    
-                    SinglePointData data = new SinglePointData(ID,day,time,pos,speed);
-                    fullData.addSinglePointData(data);
-                }
+                 //11,2018-01-23,15:27:41,35.40945,136.57719,0.300,26.0,false
+                String[] data = Line.split(Pattern.quote(","));
+                int ID = data1_id;
+                String day = data[1];
+                String time = data[2];
+                double lat = Double.parseDouble(data[3]);
+                double lng = Double.parseDouble(data[4]);
+                double speed = Double.parseDouble(data[5]);
+                double hight = Double.parseDouble(data[6]);
+                double[] posdouble = {lat, lng, hight};
+                //位置クラス（１つの点を表す）
+                GPSPosition pos = GPSPosition.parseFromDouble(posdouble);
+
+                SinglePointData posData = new SinglePointData(ID, day, time, pos, speed);
+                fullGPSData.addSinglePointData(posData);
+                data1_id++;
+                
             }
         }
 
         reader.close();
 
         //プログラムの出力
-        fullData.calculateAllDifferenceValue();
-        fullData.cheakTurning();
+        fullGPSData.calculateAllDifferenceValue();
+        fullGPSData.cheakTurning();
         
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8"));
-        fullData.writeOutAll(outputFile);
+        fullGPSData.writeOutAll(outputFile);
         writer.close();
     }
 

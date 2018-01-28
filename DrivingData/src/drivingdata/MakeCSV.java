@@ -58,7 +58,7 @@ public class MakeCSV extends javax.swing.JFrame {
 
         jLabel1.setText("ODBFile");
 
-        jTextField1.setText("C:\\Users\\takagi\\Documents\\GitHub\\research-project\\DrivingData\\01_11_2.txt");
+        jTextField1.setText("C:\\Users\\takagi masaya\\Documents\\GitHub\\research-project\\DrivingData\\01_23_2.txt");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -147,7 +147,7 @@ public class MakeCSV extends javax.swing.JFrame {
         String filename = inputfile.getName().substring(0, inputfile.getName().lastIndexOf("."));
         File saveDir = inputfile.getParentFile();
         //saveDir.mkdirs();
-        File outputFile = new File(saveDir.getPath() + File.separator + filename + "_csv.txt");
+        File outputFile = new File(saveDir.getPath() + File.separator + filename + "_log.txt");
 
         try {
             parser.parseLog(inputfile, outputFile);
@@ -155,7 +155,7 @@ public class MakeCSV extends javax.swing.JFrame {
 
             //自動ファイルオープン
             Desktop desktop = Desktop.getDesktop();
-            //ファイルオープンをサポートしている場合にはCSVファイルを表示する。
+            //ファイルオープンをサポートしている場合にはファイルを表示する。
             if (desktop.isSupported(Desktop.Action.OPEN)) {
                 try {
                     desktop.open(outputFile);
