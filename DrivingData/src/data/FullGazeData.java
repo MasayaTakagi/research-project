@@ -54,7 +54,7 @@ public class FullGazeData {
         for (int dataID = 1; dataID <= this.dataList.size(); dataID++) {
             int[] currentData = this.getGazePointData(dataID).getMatrix();
             if (currentData[0] == 0 && currentData[1] == 0) {
-                for (int index1 = 1; index1 < 3; index1++) {
+                for (int index1 = 1; index1 < 3 && dataID - index1 > 0; index1++) {
                     if (this.getGazePointData(dataID - index1).getMatrix()[0] != 0 && this.getGazePointData(dataID - index1).getMatrix()[1] != 0) {
                         beforeData = this.getGazePointData(dataID - index1).getMatrix()[0];
                         break;
@@ -66,7 +66,11 @@ public class FullGazeData {
                         break;
                     }
                 }
-                currentData[0] = (beforeData + afterData) / 2;
+                if (beforeData != 0 && afterData != 0) {
+                    currentData[0] = (beforeData + afterData) / 2;
+                }
+                beforeData = 0;
+                afterData = 0;
             }
             if (currentData[0] != 0 || currentData[1] != 0) {
                 switch (status) {

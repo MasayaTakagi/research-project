@@ -157,9 +157,6 @@ public class MakeHTML2Parser implements LogDoubleParser {
                 writer.println("        var marker" + i + " = new google.maps.Marker({");
                 writer.println("        position: latlng" + i + ",");
                 writer.println("        map: map,");
-                if (posData2.getCheakSideSta() == 2) {
-                    writer.println("        animation: google.maps.Animation.DROP");
-                }
                 writer.println("        });");
             }
         }
