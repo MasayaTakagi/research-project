@@ -36,6 +36,13 @@ public class FullPointData {
     private final double CHEAK_DISTANCE = 20;  //右左折と判断する割合
     private final int LOG_ID_START = 340;
     private final int LOG_ID_FINISH = 349;
+    
+    private static final double LONG_RADIUS = 6378137;
+    private static final double SHORT_RADIUS = 6356752;
+    private static final double TIRE_PROFILE = 298.257223563;
+    private static final double E2 = 0.00669438;
+    private static final double a = 6335439.327;
+    
 
     public FullPointData() {
 
@@ -126,22 +133,43 @@ public class FullPointData {
 
     public static void calculateDifferenceValue(SinglePointData data1, SinglePointData data2) {
         double[] llh1 = data1.getPosition().getPositonByDoubleDegreeValue();
-        double[] xyz1 = GPSPosition.llh2xyz(llh1, 1);
-
         double[] llh2 = data2.getPosition().getPositonByDoubleDegreeValue();
-        double[] xyz2 = GPSPosition.llh2xyz(llh2, 1);
+        
+        if(llh1[0] == llh2[0] && llh1[1] == llh2[1]){
+           data1.setDifferenceValue(0, 0);
+           return;
+        }
+        
+        double x1 = Math.toRadians(llh1[0]);
+        double y1 = Math.toRadians(llh1[1]);
+        double x2 = Math.toRadians(llh2[0]);
+        double y2 = Math.toRadians(llh2[1]);
+        
+        //方位の計算
+        double Y = Math.cos(Math.toRadians(llh2[0])) * Math.sin(Math.toRadians(llh2[1] - llh1[1]));
+        double X = Math.cos(Math.toRadians(llh1[0])) * Math.sin(Math.toRadians(llh2[0])) - Math.sin(Math.toRadians(llh1[0])) * Math.cos(Math.toRadians(llh2[0])) * Math.cos(Math.toRadians(llh2[1] - llh1[1]));
 
-        double distance = Math.sqrt((xyz2[0] - xyz1[0]) * (xyz2[0] - xyz1[0]) + (xyz2[1] - xyz1[1]) * (xyz2[1] - xyz1[1]));
-        double radian = Math.atan2(xyz2[1] - xyz1[1], xyz2[0] - xyz1[0]);
+        double radian = Math.atan(Y / X);
+
+        if (radian < 0) {
+            radian = radian + 2 * Math.PI;
+        }
+
         double degree = radian * 180 / Math.PI;
-
+        
+        if(degree == -0){
+            degree = 0;
+        }
+        //距離の計算
+        double dx = x1 - x2;
+        double dy = y1 - y2;
+        double W = Math.sqrt(1 - E2 * Math.sin((y1 + y2) / 2) * Math.sin((y1 + y2) / 2));
+        double N = LONG_RADIUS / W;
+        double M = LONG_RADIUS * (1 - E2) / (W * W * W);
+        
+        double distance = Math.sqrt((dy * M * dy * M) + (dx * N * Math.cos((y1 + y2) / 2) * dx * N * Math.cos((y1 + y2) / 2)));
+        
         data1.setDifferenceValue(degree, distance);
-
-        /**
-         * System.out.println(Arrays.toString(xyz1));
-         * System.out.println(Arrays.toString(xyz2));
-         * System.out.println(distance); System.out.println(degree);
-         */
     }
 
     public void calculateAllDifferenceValue() {

@@ -361,7 +361,7 @@ public class GPSPosition {
 	/** 緯度経度高さから直交座標に変換する */
 	public static double[] llh2xyz(double[] llh,int type){
 		//必要な値の算出
-		//	離心率の２乗
+		//離心率の２乗
 		//double e2_value = (LONG_RADIUS[type]*LONG_RADIUS[type] - SHORT_RADIUS[type]*SHORT_RADIUS[type] ) / LONG_RADIUS[type]*LONG_RADIUS[type];
 		double e = Math.sqrt(LONG_RADIUS[type]*LONG_RADIUS[type] - SHORT_RADIUS[type]*SHORT_RADIUS[type]) / LONG_RADIUS[type];
 		double e2_value = e*e;
@@ -383,10 +383,10 @@ public class GPSPosition {
 		//必要な値の算出
 		double p_value = Math.sqrt(xyz[0]*xyz[0] + xyz[1]*xyz[1]);
 		double th_value = Math.atan2(xyz[2]*LONG_RADIUS[type],p_value * SHORT_RADIUS[type]);
-		//	離心率の２乗
+		//離心率の２乗
 		double e = Math.sqrt(LONG_RADIUS[type]*LONG_RADIUS[type] - SHORT_RADIUS[type]*SHORT_RADIUS[type]) / LONG_RADIUS[type];
 		double e2_value = e*e;
-		//	離心率の２乗(短半径基準)
+		//離心率の２乗(短半径基準)
 		double e_dash = Math.sqrt(LONG_RADIUS[type]*LONG_RADIUS[type] - SHORT_RADIUS[type]*SHORT_RADIUS[type]) / SHORT_RADIUS[type];
 		double e2_dash_value = e_dash*e_dash;
 
