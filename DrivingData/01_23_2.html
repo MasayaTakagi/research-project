@@ -19,10 +19,11 @@
 
       var mapOptions = {
           zoom: 15,
-          center: new google.maps.LatLng(35.409459999999996,136.57726),
+          center: new google.maps.LatLng(0, -180),
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
       map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
+<<<<<<< HEAD
         var line1 = [
             new google.maps.LatLng(35.44945,136.56381000000002),
             new google.maps.LatLng(35.44943,136.56379),
@@ -978,6 +979,8 @@
           strokeWeight: 5
         });
         line17Path.setMap(map);
+=======
+>>>>>>> 53e4575edf4d3a97d7ee471b04b7829c5127089f
       }
 
       google.maps.event.addDomListener(window, 'load', initialize);
