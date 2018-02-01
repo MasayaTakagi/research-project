@@ -30,18 +30,18 @@ public class MakeCSVParser implements LogParser {
     @Override
     public void parseLog(File inputFile, File outputFile) throws IOException {
         /**実際に変換するメソッド*/     
-        //データ部分を読み込み
+       String Line; 
+       //データ部分を読み込み
         FullPointData fullGPSData = new FullPointData();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF-8"));
+        BufferedReader reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF-8"));
         int data1_id = 1;
-        String Line;
-        
-        while ((Line = reader.readLine()) != null) {
+
+        while ((Line = reader1.readLine()) != null) {
             if (Line.startsWith("//")) {
                 //何もしない
             } else {
-                //データサンプル(タブ区切り)                
-                 //11,2018-01-23,15:27:41,35.40945,136.57719,0.300,26.0,false
+                //データサンプル(カンマ区切り)                
+                //11,2018-01-23,15:27:41,35.40945,136.57719,0.300,26.0,false
                 String[] data = Line.split(Pattern.quote(","));
                 int ID = data1_id;
                 String day = data[1];
@@ -57,11 +57,9 @@ public class MakeCSVParser implements LogParser {
                 SinglePointData posData = new SinglePointData(ID, day, time, pos, speed);
                 fullGPSData.addSinglePointData(posData);
                 data1_id++;
-                
             }
         }
-
-        reader.close();
+        reader1.close();
 
         //プログラムの出力
         fullGPSData.calculateAllDifferenceValue();
