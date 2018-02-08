@@ -63,7 +63,7 @@ public class GazeCheakParser implements LogParser {
         reader2.close();
         
         ArrayList<LocalTime> gazeCheakList = fullGazeData.cheakSide();
-        System.out.println(gazeCheakList);
+        fullGazeData.writeOutAll(outputFile);
         
     }
     

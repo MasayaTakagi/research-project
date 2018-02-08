@@ -19,6 +19,7 @@ public class SingleGazeData {
     public int matrix[] = new int[2];
     public LocalTime date;
     public String time;
+    public int status = 0;
     
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 
@@ -45,5 +46,19 @@ public class SingleGazeData {
     
     public int[] getMatrix(){
         return this.matrix;
+    }
+    
+    public void setSta(int status){
+        this.status = status;
+    }
+    
+     public String writeOut() {
+        String strID = String.valueOf(this.ID);
+        String strTime = this.time;
+        String strx = String.valueOf(this.matrix[0]);
+        String stry = String.valueOf(this.matrix[1]);
+        String strSta = String.valueOf(this.status);
+
+        return strID + "\t" + strTime + "\t" + strx + "\t" + stry + "\t" + strSta;
     }
 }

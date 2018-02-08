@@ -33,12 +33,11 @@ public class GazeCheak extends javax.swing.JFrame {
     /**
      * Creates new form mainGUI
      */
-
     public GazeCheak() {
         initComponents();
         this.parser = new GazeCheakParser();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -145,11 +144,20 @@ public class GazeCheak extends javax.swing.JFrame {
         String filename = inputFile.getName().substring(0, inputFile.getName().lastIndexOf("."));
         File saveDir = inputFile.getParentFile();
         //saveDir.mkdirs();
-        File outputFile = new File(saveDir.getPath() + File.separator + filename + ".html");
+        File outputFile = new File(saveDir.getPath() + File.separator + filename + "_log.txt");
 
         try {
             parser.parseLog(inputFile, outputFile);
             this.printMessage("変換が完了しました", "変換完了");
+            //自動ファイルオープン
+            Desktop desktop = Desktop.getDesktop();
+            //ファイルオープンをサポートしている場合にはCSVファイルを表示する。
+            if (desktop.isSupported(Desktop.Action.OPEN)) {
+                try {
+                    desktop.open(outputFile);
+                } catch (IOException e) {
+                }
+            }
 
         } catch (IOException ex) {
             ex.printStackTrace();
