@@ -34,8 +34,8 @@ public class FullPointData {
     private final double TURN_FINISH_DISTANCE = 30; //右左折終了と判断する距離
     private final double ANGLE_VARIATION = 60;  //右左折中の最小変化角
     private final double CHEAK_DISTANCE = 20;  //右左折と判断する割合
-    private final int LOG_ID_START = 340;
-    private final int LOG_ID_FINISH = 349;
+    private final int LOG_ID_START = 471;
+    private final int LOG_ID_FINISH = 479;
     
     private static final double LONG_RADIUS = 6378137;
     private static final double SHORT_RADIUS = 6356752;
