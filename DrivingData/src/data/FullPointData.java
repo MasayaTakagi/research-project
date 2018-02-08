@@ -27,14 +27,15 @@ public class FullPointData {
 
     public ArrayList<SinglePointData> dataList = new ArrayList<SinglePointData>();
 
-    private final double TURNING_SPEED = 40; //右左折中の上限速度
+    private final double TURNING_SPEED = 50; //右左折中の上限速度
     private final double STOP_SPEED = 3; //停止と判断する速度
     private final double STOP_DISTANCE = 1; //停止と判断する移動距離
     private final double TOTAL_DISTANCE = 30; //右左折中の上限移動距離
     private final double TURN_FINISH_DISTANCE = 30; //右左折終了と判断する距離
-    private final double ANGLE_VARIATION = 60;  //右左折中の最小変化角
+    private final double LEFT_ANGLE_VARIATION = 60;
+    private final double RIGHT_ANGLE_VARIATION = 50;//右左折中の最小変化角
     private final double CHEAK_DISTANCE = 20;  //右左折と判断する割合
-    private final int LOG_ID_START = 471;
+    private final int LOG_ID_START = 1;
     private final int LOG_ID_FINISH = 479;
     
     private static final double LONG_RADIUS = 6378137;
@@ -222,34 +223,28 @@ public class FullPointData {
                             angle2 = this.dataList.get(dataID - 1 + i).getDifferenceValue()[0];
                             distance1 = distance1 + this.dataList.get(dataID - 1 + i).getDifferenceValue()[1];
                             //変化角の計算
-                            if (angle1 <= 0) {
+                            if (angle1 <= 180) {
                                 if (angle1 <= angle2 && angle2 <= angle1 + 180) {
-                                    //angleが増えた場合(左折)
-                                    if (angle2 < 0) {
-                                        angleVariation = Math.abs(angle2 - angle1);
-                                    } else {
-                                        angleVariation = Math.abs(angle2 + angle1);
-                                    }
+                                    //angleが増えた場合(右折)
+                                    angleVariation = Math.abs(angle2 - angle1);
                                 } else {
-                                    //angleが減った場合(右折)
+                                    //angleが減った場合(左折)
                                     if (angle2 < angle1) {
-                                        angleVariation = -Math.abs(angle2 - angle1);
+                                        angleVariation = -Math.abs(angle1 - angle2);
                                     } else {
-                                        angleVariation = -(360 - Math.abs(angle2 - angle1));
+                                        angleVariation = -Math.abs(angle1 + (360 - angle2));
                                     }
                                 }
                             } else {
-                                if (angle1 >= angle2 && angle2 >= angle1 - 180) {
-                                    if (angle2 > 0) {
-                                        angleVariation = -Math.abs(angle2 - angle1);
-                                    } else {
-                                        angleVariation = -Math.abs(angle2 + angle1);
-                                    }
+                                if (angle2 <= angle1 && angle2 >= angle1 - 180) {
+                                    //angleが減った場合(左折)
+                                    angleVariation = -Math.abs(angle1 - angle2);
                                 } else {
+                                    //angleが増えた場合(右折)
                                     if (angle2 > angle1) {
                                         angleVariation = Math.abs(angle2 - angle1);
                                     } else {
-                                        angleVariation = (360 - Math.abs(angle2 - angle1));
+                                        angleVariation = Math.abs(angle2 + (360 - angle1));
                                     }
                                 }
                             }
@@ -263,22 +258,22 @@ public class FullPointData {
                             }
                         }
                         for (Double[] angle : angleVariationList) {
-                            if (angle[0] > this.ANGLE_VARIATION) {
+                            if (angle[0] > this.RIGHT_ANGLE_VARIATION) {
                                 turnCheakDistance[0] = turnCheakDistance[0] + angle[1];
-                            } else if (angle[0] < -this.ANGLE_VARIATION) {
+                            } else if (angle[0] < -this.LEFT_ANGLE_VARIATION) {
                                 turnCheakDistance[1] = turnCheakDistance[1] + angle[1];
                             }
                         }
                         if (turnCheakDistance[0] > CHEAK_DISTANCE) {
                             turnStartID = dataID;
                             turnFlag = 2;
-                            turnDirection = 1;
-                            dataID++;
+                            turnDirection = 2;
+                            //dataID++;
                         } else if (turnCheakDistance[1] > CHEAK_DISTANCE) {
                             turnStartID = dataID;
                             turnFlag = 2;
-                            turnDirection = 2;
-                            dataID++;
+                            turnDirection = 1;
+                            //dataID++;
                         }
                         Arrays.fill(turnCheakDistance, 0d);
                     }
