@@ -27,11 +27,11 @@ public class FullPointData {
 
     public ArrayList<SinglePointData> dataList = new ArrayList<SinglePointData>();
 
-    private final double TURNING_SPEED = 35; //右左折中の上限速度
+    private final double TURNING_SPEED = 40; //右左折中の上限速度
     private final double STOP_SPEED = 3; //停止と判断する速度
     private final double STOP_DISTANCE = 1; //停止と判断する移動距離
     private final double TOTAL_DISTANCE = 30; //右左折中の上限移動距離
-    private final double TURN_FINISH_DISTANCE = 20; //右左折終了と判断する距離
+    private final double TURN_FINISH_DISTANCE = 30; //右左折終了と判断する距離
     private final double ANGLE_VARIATION = 60;  //右左折中の最小変化角
     private final double CHEAK_DISTANCE = 20;  //右左折と判断する割合
     private final int LOG_ID_START = 340;
@@ -149,7 +149,8 @@ public class FullPointData {
         double Y = Math.cos(Math.toRadians(llh2[0])) * Math.sin(Math.toRadians(llh2[1] - llh1[1]));
         double X = Math.cos(Math.toRadians(llh1[0])) * Math.sin(Math.toRadians(llh2[0])) - Math.sin(Math.toRadians(llh1[0])) * Math.cos(Math.toRadians(llh2[0])) * Math.cos(Math.toRadians(llh2[1] - llh1[1]));
 
-        double radian = Math.atan(Y / X);
+        double radian = Math.atan2(Y, X);
+        //double radian = Math.atan2(Math.sin(y2 - y1), ((Math.cos(x1) * Math.tan(x2)) - (Math.sin(x1) * Math.cos(y2 - y1))));
 
         if (radian < 0) {
             radian = radian + 2 * Math.PI;
@@ -272,10 +273,12 @@ public class FullPointData {
                             turnStartID = dataID;
                             turnFlag = 2;
                             turnDirection = 1;
+                            dataID++;
                         } else if (turnCheakDistance[1] > CHEAK_DISTANCE) {
                             turnStartID = dataID;
                             turnFlag = 2;
                             turnDirection = 2;
+                            dataID++;
                         }
                         Arrays.fill(turnCheakDistance, 0d);
                     }
